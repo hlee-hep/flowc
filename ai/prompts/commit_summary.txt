@@ -1,0 +1,4 @@
+Summarize today's git commits in concise bullet points:
+
+Commits:
+{commits}

@@ -1,0 +1,59 @@
+# flowc/services/arxiv_service.py
+
+import xml.etree.ElementTree as ET
+from flowc.connectors.arxiv_api import ArxivAPI
+from flowc.connectors.db import PaperDatabase
+
+KEYWORDS = [
+    "tau", "lfv", "belle ii", "trigger",
+    "form factor", "tdcpv"
+]
+
+class ArxivService:
+    def __init__(self):
+        self.api = ArxivAPI()
+        self.db = PaperDatabase()
+
+    def fetch_raw(self) -> str:
+        return self.api.fetch()
+
+    def parse(self, raw: str) -> list[dict]:
+        root = ET.fromstring(raw)
+        ns = {"atom": "http://www.w3.org/2005/Atom"}
+        entries = []
+        for entry in root.findall("atom:entry", ns):
+            title = entry.find("atom:title", ns).text
+            summary = entry.find("atom:summary", ns).text
+            link = entry.find("atom:link", ns).attrib.get("href")
+            idx = entry.find("atom:id", ns).text
+            entries.append({
+                "id": idx,
+                "title": title,
+                "summary": summary,
+                "link": link,
+            })
+        return entries
+
+    def filter_interesting(self, papers: list[dict]) -> list[dict]:
+        filtered = []
+        for p in papers:
+            title_lower = p["title"].lower()
+            if any(kw in title_lower for kw in KEYWORDS):
+                if not self.db.paper_exists(p["id"]):
+                    filtered.append(p)
+        return filtered
+
+    def save(self, paper_id: str, title: str, summary: str):
+        self.db.save_paper(paper_id, title, summary)
+
+    def format_paper(self, p: dict, summary: str) -> str:
+        return f"**{p['title']}**\n{summary}\n{p['link']}"
+
+    def run(self) -> list[dict]:
+        raw = self.fetch_raw()
+        papers = self.parse(raw)
+        interesting = self.filter_interesting(papers)
+        return interesting
+
+    def format_html(self, p: dict, summary: str) -> str:
+        return f"<b>{p['title']}</b><br>{summary}<br><a href='{p['link']}'>[link]</a><br><br>"

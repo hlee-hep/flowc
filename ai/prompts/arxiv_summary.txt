@@ -1,0 +1,12 @@
+Summarize the following arXiv papers in clear, concise bullet points.
+Each bullet point should include:
+- The paper title
+- One–two sentence summary of the main idea
+- (Optional) why it may be relevant for HEP or ML
+
+Do NOT add extra information not present in the text.
+Do NOT invent content.
+Do NOT over-explain.
+
+Papers:
+{papers}

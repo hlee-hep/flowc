@@ -1,0 +1,8 @@
+Please rewrite the following daily log into clear, smooth, and readable sentences.  
+Organize it chronologically if possible.  
+Keep every factual detail exactly as it is — do not invent, remove, or alter any content.  
+You may slightly compact the writing, but only in ways that do not lose meaning.
+
+Rewrite the following:
+
+{text}
