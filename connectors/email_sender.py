@@ -34,7 +34,8 @@ class EmailSender:
                         server.login(Config.SMTP_USER, Config.SMTP_PASSWORD)
                     server.send_message(msg)
 
-                return True  
+                logger.info("Email sent successfully via %s:%s", Config.SMTP_HOST, Config.SMTP_PORT)
+                return True
 
             except Exception as exc:
                 last_error = exc

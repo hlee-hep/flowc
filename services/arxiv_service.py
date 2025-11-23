@@ -17,6 +17,7 @@ class ArxivService:
         self.db = PaperDatabase()
 
     def fetch_raw(self) -> str:
+        logger.info("Fetching arXiv feed")
         return self.api.fetch()
 
     def parse(self, raw: str) -> list[dict]:
@@ -43,6 +44,7 @@ class ArxivService:
                 "summary": summary,
                 "link": link,
             })
+        logger.info("Parsed %d arXiv entries", len(entries))
         return entries
 
     def filter_interesting(self, papers: list[dict]) -> list[dict]:
@@ -52,9 +54,11 @@ class ArxivService:
             if any(kw in title_lower for kw in KEYWORDS):
                 if not self.db.paper_exists(p["id"]):
                     filtered.append(p)
+        logger.info("Filtered %d interesting new arXiv papers", len(filtered))
         return filtered
 
     def save(self, paper_id: str, title: str, summary: str):
+        logger.info("Persisting arXiv paper %s to database", paper_id)
         self.db.save_paper(paper_id, title, summary)
 
     def format_paper(self, p: dict, summary: str) -> str:
@@ -64,6 +68,7 @@ class ArxivService:
         raw = self.fetch_raw()
         papers = self.parse(raw)
         interesting = self.filter_interesting(papers)
+        logger.info("ArxivService run completed with %d papers", len(interesting))
         return interesting
 
     def format_html(self, p: dict, summary: str) -> str:

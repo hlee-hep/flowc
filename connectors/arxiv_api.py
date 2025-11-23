@@ -11,6 +11,7 @@ class ArxivAPI:
     BASE_URL = "https://export.arxiv.org/api/query"
 
     def fetch(self, days=1, max_results=30) -> str:
+        logger.info("Requesting arXiv feed for last %s day(s) with max %s results", days, max_results)
         end = datetime.utcnow()
         start = end - timedelta(days=days)
 
@@ -35,6 +36,7 @@ class ArxivAPI:
             try:
                 resp = requests.get(self.BASE_URL, params=params, timeout=10)
                 resp.raise_for_status()
+                logger.info("Successfully fetched arXiv feed (attempt %s)", attempt)
                 return resp.text
             except Exception as exc:  # noqa: BLE001
                 last_error = exc

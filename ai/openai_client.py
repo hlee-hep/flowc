@@ -30,6 +30,7 @@ class AI:
         # 
         cached = cache_get(cls.model_name, prompt, ttl)
         if cached is not None:
+            logger.info("Cached prompt exists. using cached one.")
             return cached
         # 
 
@@ -45,6 +46,7 @@ class AI:
                 )
                 out = r.choices[0].message.content
                 cache_set(cls.model_name, prompt, out)  # 
+                logger.info("The prompt is cached (vaild for %d seconds).", ttl)
                 return out
 
             except Exception as exc:

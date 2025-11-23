@@ -1,3 +1,5 @@
+import logging
+
 from flowc.services.notion_service import NotionService
 from flowc.services.telegram_digest_service import TelegramDigestService
 from flowc.services.commit_service import CommitService
@@ -6,6 +8,8 @@ from flowc.services.arxiv_service import ArxivService
 from flowc.services.archive_service import ArchiveService
 
 from flowc.ai.summary import rewrite_daily_log, summarize_commits, summarize_arxiv
+
+logger = logging.getLogger(__name__)
 
 
 class EveningFlow:
@@ -16,8 +20,9 @@ class EveningFlow:
         self.email = EmailReportService()
         self.arxiv = ArxivService()
         self.archive = ArchiveService()
-    
+
     def run(self):
+        logger.info("Starting evening flow")
 
         # ------------------------------------------------
         # 1) Commit
@@ -46,7 +51,11 @@ class EveningFlow:
         # ------------------------------------------------
         # 5) Telegram digest
         # ------------------------------------------------
-        telegram_msg = self._process_telegram(commit_results["telegram"],notion_results["telegram"],arxiv_results["telegram"])
+        telegram_msg = self._process_telegram(
+            commit_results["telegram"],
+            notion_results["telegram"],
+            arxiv_results["telegram"],
+        )
 
         #
         # 6) Archieving
@@ -65,10 +74,12 @@ class EveningFlow:
         # Arxiv summaries
         self.archive.save_html("arxiv_email.html", arxiv_results["email"])
         self.archive.save_text("arxiv_telegram.txt", arxiv_results["telegram"])
+        logger.info("Evening flow completed")
     # ========================================================================
     # Commit Section
     # ========================================================================
     def _process_commits(self):
+        logger.info("Fetching and summarizing commits")
         raw_commit = self.commit.get_raw()
 
         result = {
@@ -78,6 +89,7 @@ class EveningFlow:
         }
 
         if not raw_commit:
+            logger.info("No commits found for the selected window")
             result["telegram"] = "No commits today."
             return result
 
@@ -85,6 +97,8 @@ class EveningFlow:
         summary_for_notion = summarize_commits(raw_commit)
         summary_for_telegram = summarize_commits(raw_commit, mode = "telegram")
         summary_for_email = summarize_commits(raw_commit, mode = "email")
+
+        logger.info("Commit summaries generated (notion/telegram/email)")
 
         # prepare outputs
         result["notion"] = summary_for_notion
@@ -97,8 +111,10 @@ class EveningFlow:
     # Notion Section
     # ========================================================================
     def _process_notion(self, commit_results):
+        logger.info("Fetching today's Notion page for evening flow")
         page = self.notion.get_today_page(self.notion.db_id)
         if not page:
+            logger.warning("No Notion page found for today; skipping Notion summaries")
             return {
                 "telegram": "No notion page today.",
                 "email": "No notion page today.",
@@ -113,12 +129,15 @@ class EveningFlow:
         ai_telegram = rewrite_daily_log(daily_log, mode="telegram")
         ai_email = rewrite_daily_log(daily_log, mode="email")
         ai_notion = rewrite_daily_log(daily_log, mode="notion")
+        logger.info("AI daily log rewrites generated for all channels")
 
         # Write to Notion
         if commit_results["notion"]:
             self.notion.write_git_summary(page["id"], commit_results["notion"])
+            logger.info("Wrote commit summary to Notion")
 
         self.notion.write_ai_summary(page["id"], ai_notion)
+        logger.info("Wrote AI daily summary to Notion")
 
         return {
             "telegram": ai_telegram,
@@ -129,9 +148,11 @@ class EveningFlow:
     # Arxiv Section
     # ========================================================================
     def _process_arxiv(self):
+        logger.info("Fetching and filtering arXiv papers")
         papers = self.arxiv.run()
 
         if not papers:
+            logger.info("No interesting arXiv papers found today")
             return {
                 "telegram": "No interesting new papers today.",
                 "email": "<p>No interesting new papers today.</p>",
@@ -139,11 +160,13 @@ class EveningFlow:
 
         summaries_default = summarize_arxiv(papers, mode = "email")
         summaries_telegram = summarize_arxiv(papers, mode = "telegram")
+        logger.info("Generated arXiv summaries for email and Telegram")
 
         # HTML (email)
         html_blocks = []
         for p, s in zip(papers, summaries_default):
             self.arxiv.save(p["id"], p["title"], s)
+            logger.info("Saved arXiv paper %s to archive", p["id"])
             html_blocks.append(self.arxiv.format_html(p, s))
 
         return {
@@ -157,15 +180,19 @@ class EveningFlow:
     # Email Section
     # ========================================================================
     def _process_email(self, notion_email, commit_email, arxiv_email):
+        logger.info("Composing and sending evening email report")
         email_html = self.email.build_html(
             summary=notion_email,
             commits_html=commit_email,
             arxiv_text=arxiv_email,
         )
         self.email.send(email_html)
+        logger.info("Evening email report sent")
         return email_html
 
     def _process_telegram(self, commit_telegram, notion_telegram, arxiv_telegram):
+        logger.info("Sending evening Telegram digest")
         telegram_msg = self.telegram.build_message_for_evening(commit_telegram, notion_telegram, arxiv_telegram)
         self.telegram.send(telegram_msg)
+        logger.info("Evening Telegram digest sent")
         return telegram_msg

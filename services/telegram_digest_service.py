@@ -1,4 +1,9 @@
+import logging
+
 from flowc.connectors.telegram import TelegramClient
+
+logger = logging.getLogger(__name__)
+
 
 class TelegramDigestService:
     def __init__(self):
@@ -11,6 +16,7 @@ class TelegramDigestService:
         return "*Evening Summary*\n\n"
 
     def send(self, text: str):
+        logger.info("Sending Telegram message (%d chars)", len(text))
         self.client.send(text)
 
     def build_message_for_evening(self, commit, summary, arxiv):

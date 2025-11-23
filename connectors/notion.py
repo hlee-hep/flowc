@@ -40,10 +40,12 @@ class NotionClient:
         payload = {"filter": {"property": "Date", "date": {"equals": date_str}}}
         res = self._request("POST", url, json=payload, fallback={"results": []})
         results = res.get("results", []) if res else []
+        logger.info("Notion query by date %s returned %d result(s)", date_str, len(results))
         return results[0] if results else None
 
     def update_page(self, page_id, properties):
         url = f"https://api.notion.com/v1/pages/{page_id}"
+        logger.info("Updating Notion page %s with fields: %s", page_id, ", ".join(properties.keys()))
         return self._request(
             "PATCH",
             url,
@@ -54,6 +56,7 @@ class NotionClient:
     def create_page(self, db_id, properties):
         url = "https://api.notion.com/v1/pages"
         payload = {"parent": {"database_id": db_id}, "properties": properties}
+        logger.info("Creating Notion page in DB %s", db_id)
         return self._request("POST", url, json=payload, fallback={})
 
     @staticmethod

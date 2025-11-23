@@ -1,5 +1,9 @@
+import logging
 import os
 from datetime import datetime
+
+logger = logging.getLogger(__name__)
+
 
 class ArchiveService:
     def __init__(self, base_dir="archive"):
@@ -17,6 +21,7 @@ class ArchiveService:
         full = os.path.join(path, filename)
         with open(full, "w", encoding="utf-8") as f:
             f.write(text or "")
+        logger.info("Saved text archive to %s", full)
         return full
 
     def save_html(self, filename: str, html: str):
@@ -24,4 +29,5 @@ class ArchiveService:
         full = os.path.join(path, filename)
         with open(full, "w", encoding="utf-8") as f:
             f.write(html or "")
+        logger.info("Saved HTML archive to %s", full)
         return full

@@ -1,6 +1,9 @@
+import logging
 from datetime import datetime, date, timedelta
 from flowc.connectors.notion import NotionClient
 from flowc.config import Config
+
+logger = logging.getLogger(__name__)
 
 class NotionService:
     """
@@ -12,6 +15,7 @@ class NotionService:
     
     def get_today_page(self, db_id: str):
         today = datetime.now().strftime("%Y-%m-%d")
+        logger.info("Querying Notion for page with date %s", today)
         return self.client.query_by_date(db_id, today)
 
     def read_field(self, page, name: str) -> str:
@@ -49,17 +53,18 @@ class NotionService:
 
         y_page = self.client.query_by_date(self.db_id, yesterday)
         if not y_page:
-            print("No page for yesterday.")
+            logger.warning("No Notion page found for yesterday; skipping carry-over")
             return
 
         carry_text = self.client.get_text(y_page["properties"], "Tomorrow")
         if not carry_text:
-            print("Nothing to carry.")
+            logger.info("No 'Tomorrow' items to carry over from yesterday")
             return
 
         t_page = self.client.query_by_date(self.db_id, today)
 
         if t_page:
+            logger.info("Updating today's TODO from yesterday's 'Tomorrow' field")
             self.client.update_page(
                 t_page["id"],
                 {
@@ -68,7 +73,7 @@ class NotionService:
                     }
                 }
             )
-            print(f"Updated today's TODO: {carry_text}")
+            logger.info("Updated today's TODO with carried-over items")
             return
 
         props = {
@@ -81,4 +86,4 @@ class NotionService:
             "Tomorrow": {"rich_text": []}
         }
         new_page = self.client.create_page(self.db_id, props)
-        print(f"Created new page for today with TODO: {carry_text}")
+        logger.info("Created new Notion page for today with carried TODO items")

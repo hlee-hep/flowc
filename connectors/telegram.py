@@ -32,6 +32,7 @@ class TelegramClient:
             try:
                 res = requests.post(url, json=payload, timeout=10)
                 res.raise_for_status()
+                logger.info("Telegram message sent successfully (attempt %s)", attempt)
                 return res.json()
 
             except Exception as exc:
