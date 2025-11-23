@@ -2,9 +2,8 @@ import logging
 import time
 
 from openai import OpenAI
-
 from flowc.config import Config
-
+from flowc.ai.cache import cache_get, cache_set  #
 
 logger = logging.getLogger(__name__)
 
@@ -25,8 +24,15 @@ class AI:
         retries: int = 3,
         retry_delay: float = 1.0,
         fallback: str = "(AI call failed)",
+        ttl: int | None = None,  # 
         **kwargs,
     ):
+        # 
+        cached = cache_get(cls.model_name, prompt, ttl)
+        if cached is not None:
+            return cached
+        # 
+
         last_error = None
         for attempt in range(1, retries + 1):
             try:
@@ -37,8 +43,11 @@ class AI:
                     max_tokens=700,
                     **kwargs
                 )
-                return r.choices[0].message.content
-            except Exception as exc:  # noqa: BLE001
+                out = r.choices[0].message.content
+                cache_set(cls.model_name, prompt, out)  # 
+                return out
+
+            except Exception as exc:
                 last_error = exc
                 logger.warning(
                     "AI call failed (attempt %s/%s): %s", attempt, retries, exc
@@ -48,3 +57,4 @@ class AI:
 
         logger.error("AI call failed after %s attempts: %s", retries, last_error)
         return fallback
+
