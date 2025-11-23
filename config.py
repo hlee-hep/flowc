@@ -1,7 +1,20 @@
 import os
+from pathlib import Path
 from dotenv import load_dotenv
 
-load_dotenv()
+ROOT_DIR = Path(__file__).resolve().parent
+load_dotenv(ROOT_DIR / ".env")
+
+
+def _resolve_path(value: str | None, default: Path) -> Path:
+    """Return an absolute path, defaulting to the repo root when relative."""
+    if value:
+        candidate = Path(value)
+        if not candidate.is_absolute():
+            candidate = ROOT_DIR / candidate
+        return candidate
+    return default
+
 
 class Config:
     OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
@@ -19,7 +32,6 @@ class Config:
     SMTP_FROM = os.getenv("SMTP_FROM")
     SMTP_TO = os.getenv("SMTP_TO")
 
-    GIT_REPO_PATH = os.getenv("GIT_REPO_PATH", ".")
-    SQLITE_PATH = os.getenv("SQLITE_PATH", "flowc.db")
-
-    FLOWC_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+    FLOWC_ROOT = ROOT_DIR
+    GIT_REPO_PATH = _resolve_path(os.getenv("GIT_REPO_PATH"), ROOT_DIR)
+    SQLITE_PATH = _resolve_path(os.getenv("SQLITE_PATH"), ROOT_DIR / "flowc.db")

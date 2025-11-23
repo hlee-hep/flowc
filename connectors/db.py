@@ -6,9 +6,11 @@ from flowc.config import Config
 
 logger = logging.getLogger(__name__)
 
+
 class PaperDatabase:
     def __init__(self, path: str | None = None):
         self.path = Path(path or Config.SQLITE_PATH)
+        self.path.parent.mkdir(parents=True, exist_ok=True)
         self.conn = sqlite3.connect(self.path)
         self.conn.row_factory = sqlite3.Row  # dict-like rows
         self._init_table()

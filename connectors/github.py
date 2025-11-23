@@ -5,6 +5,7 @@ from flowc.config import Config
 
 logger = logging.getLogger(__name__)
 
+
 class GitConnector:
     def __init__(self, repo_path: str | None = None):
         self.repo_path = Path(repo_path or Config.GIT_REPO_PATH)

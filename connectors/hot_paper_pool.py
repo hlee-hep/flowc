@@ -15,6 +15,7 @@ class HotPaperPool:
 
     def __init__(self, path: str | None = None):
         self.path = Path(path or Config.SQLITE_PATH)
+        self.path.parent.mkdir(parents=True, exist_ok=True)
         self.conn = sqlite3.connect(self.path)
         self.conn.row_factory = sqlite3.Row
         self._init_table()
@@ -94,7 +95,7 @@ class HotPaperPool:
     def close(self):
         self.conn.close()
         logger.info("Closed SQLite connection to HotPaperPool %s", self.path)
-    
+
     def fetch_all(self):
         cur = self.conn.cursor()
         cur.execute("SELECT * FROM hot_paper_pool ORDER BY id")
