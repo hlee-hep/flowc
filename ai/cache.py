@@ -4,7 +4,7 @@ import time
 from flowc.config import Config 
 from pathlib import Path
 
-CACHE_DIR = Config.FLOWC_ROOT / ".flowc_cache"
+CACHE_DIR = Config.FLOWC_ROOT / ".." / ".flowc_cache"
 CACHE_DIR.mkdir(exist_ok=True)
 
 

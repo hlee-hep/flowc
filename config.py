@@ -33,5 +33,5 @@ class Config:
     SMTP_TO = os.getenv("SMTP_TO")
 
     FLOWC_ROOT = ROOT_DIR
-    GIT_REPO_PATH = _resolve_path(os.getenv("GIT_REPO_PATH"), ROOT_DIR)
-    SQLITE_PATH = _resolve_path(os.getenv("SQLITE_PATH"), ROOT_DIR / "flowc.db")
+    GIT_REPO_PATH = os.getenv("GIT_REPO_PATH")
+    SQLITE_PATH = os.getenv("SQLITE_PATH")
