@@ -4,11 +4,16 @@ from datetime import datetime
 
 logger = logging.getLogger(__name__)
 
+FLOWC_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
+
 
 class ArchiveService:
-    def __init__(self, base_dir="archive"):
+    def __init__(self, base_dir=None):
+        if base_dir is None:
+            base_dir = os.path.join(FLOWC_ROOT, "archive")
+
         self.base_dir = base_dir
-        os.makedirs(base_dir, exist_ok=True)
+        os.makedirs(self.base_dir, exist_ok=True)
 
     def get_today_dir(self):
         today = datetime.now().strftime("%Y-%m-%d")

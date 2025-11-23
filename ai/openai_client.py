@@ -7,6 +7,7 @@ from flowc.ai.cache import cache_get, cache_set  #
 
 logger = logging.getLogger(__name__)
 
+
 class AI:
     client = OpenAI(api_key=Config.OPENAI_API_KEY)
     model_name = "gpt-4o-mini"
@@ -24,15 +25,17 @@ class AI:
         retries: int = 3,
         retry_delay: float = 1.0,
         fallback: str = "(AI call failed)",
-        ttl: int | None = None,  # 
+        ttl: int | None = None,
+        use_cache: bool = True,
+        max_completion_tokens: int = 1500,
         **kwargs,
     ):
-        # 
-        cached = cache_get(cls.model_name, prompt, ttl)
+        cached = None
+        if use_cache and ttl and ttl > 0:
+            cached = cache_get(cls.model_name, prompt, ttl)
         if cached is not None:
             logger.info("Cached prompt exists. using cached one.")
             return cached
-        # 
 
         last_error = None
         for attempt in range(1, retries + 1):
@@ -41,12 +44,28 @@ class AI:
                     model=cls.model_name,
                     messages=[{"role": "user", "content": prompt}],
                     temperature=0.3,
-                    max_tokens=700,
-                    **kwargs
+                    max_completion_tokens=max_completion_tokens,
+                    **kwargs,
                 )
-                out = r.choices[0].message.content
-                cache_set(cls.model_name, prompt, out)  # 
-                logger.info("The prompt is cached (vaild for %d seconds).", ttl)
+
+                msg = r.choices[0].message
+                out = msg.content
+
+                if not out:
+                    logger.error(
+                        "AI.ask: empty message.content. raw response: %r",
+                        r,
+                    )
+                    continue
+
+                if use_cache and ttl and ttl > 0:
+                    cache_set(cls.model_name, prompt, out)
+                    logger.info(
+                        "The prompt is cached (vaild for %d seconds).", ttl
+                    )
+                else:
+                    logger.info("The prompt is not cached (ttl=%r).", ttl)
+
                 return out
 
             except Exception as exc:
@@ -59,4 +78,3 @@ class AI:
 
         logger.error("AI call failed after %s attempts: %s", retries, last_error)
         return fallback
-

@@ -21,3 +21,5 @@ class Config:
 
     GIT_REPO_PATH = os.getenv("GIT_REPO_PATH", ".")
     SQLITE_PATH = os.getenv("SQLITE_PATH", "flowc.db")
+
+    FLOWC_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))

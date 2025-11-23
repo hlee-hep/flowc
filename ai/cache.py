@@ -1,9 +1,10 @@
 import hashlib
 import json
 import time
+from flowc.config import Config 
 from pathlib import Path
 
-CACHE_DIR = Path(".flowc_cache")
+CACHE_DIR = Path(Config.FLOWC_ROOT+"/flowc_cache")
 CACHE_DIR.mkdir(exist_ok=True)
 
 

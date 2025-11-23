@@ -40,16 +40,23 @@ class TelegramDigestService:
         
         return msg
 
-    def build_message_for_morning(self, page, todo):
+    def build_message_for_morning(self, page, todo, hot=None):
         msg = self.format_morning()
         if not page:
-            msg += "No Notion daily page found for today."
+            msg += "No Notion daily page found for today.\n"
             return msg
         
         if todo:
             msg += "*Todo*\n"
             msg += todo
         else:
-            msg += "No Todo items for today."
+            msg += "No Todo items for today.\n"
+        
+        if hot:
+            msg += "\n\n*Today's Hot Paper*\n"
+            msg += f"*{hot['title']}*\n"
+            msg += f"{hot['summary']}\n"
+        if "link" in hot:
+            msg += f"{hot['link']}\n"
         
         return msg
