@@ -3,6 +3,7 @@ import xml.etree.ElementTree as ET
 
 from flowc.connectors.arxiv_api import ArxivAPI
 from flowc.connectors.db import PaperDatabase
+from flowc.ai.keyword_engine import KeywordEngine
 
 KEYWORDS = [
     "tau", "lfv", "belle ii", "trigger",
@@ -15,6 +16,7 @@ class ArxivService:
     def __init__(self):
         self.api = ArxivAPI()
         self.db = PaperDatabase()
+        self.keyword_engine = KeywordEngine()
 
     def fetch_raw(self) -> str:
         logger.info("Fetching arXiv feed")
@@ -48,12 +50,19 @@ class ArxivService:
         return entries
 
     def filter_interesting(self, papers: list[dict]) -> list[dict]:
+        dynamic_keywords = self.keyword_engine.generate(papers[:20]) 
+
         filtered = []
         for p in papers:
             title_lower = p["title"].lower()
-            if any(kw in title_lower for kw in KEYWORDS):
+
+            all_keywords = set(dynamic_keywords) | set(self.keyword_engine.base_keywords)
+            #all_keywords = dynamic_keywords
+
+            if any(kw in title_lower for kw in all_keywords):
                 if not self.db.paper_exists(p["id"]):
                     filtered.append(p)
+
         logger.info("Filtered %d interesting new arXiv papers", len(filtered))
         return filtered
 
