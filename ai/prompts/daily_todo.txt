@@ -1,7 +1,0 @@
-Please help reorganize the following daily TODO list into a clearer and more readable format.  
-Keep all tasks exactly as they are — no additions, no removals, no altering of meaning.  
-You may group related items and simplify wording as long as the intention stays the same.
-
-Here is the text:
-
-{text}

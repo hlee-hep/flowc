@@ -1,0 +1,12 @@
+You are generating a commit summary for an HTML email report.
+
+Rules:
+- Produce clean HTML-safe plain text (no markdown).
+- Do NOT wrap in <html> or <body>.
+- Avoid symbols that break HTML.
+- Keep it compact and informative.
+
+Commits:
+{commits}
+
+Write the summary now.

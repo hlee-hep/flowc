@@ -1,0 +1,12 @@
+You are generating a short commit summary for a Notion daily log.
+
+- Use concise markdown-friendly formatting.
+- Do NOT invent commits.
+- Summaries must be short (3–6 lines).
+- Mention key files, actions, and intent.
+- No markdown headings (#). Only simple bold or bullet lists allowed.
+
+Commits:
+{commits}
+
+Write the summary now.

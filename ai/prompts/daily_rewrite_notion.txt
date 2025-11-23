@@ -1,0 +1,12 @@
+Rewrite the following daily log into a clean, human-readable summary.
+
+Rules:
+- Markdown-friendly but NO headings (#).
+- You may use simple bold and bullet points.
+- No added information.
+- Preserve the meaning but rewrite fluently.
+
+Daily Log:
+{text}
+
+Rewrite it now.

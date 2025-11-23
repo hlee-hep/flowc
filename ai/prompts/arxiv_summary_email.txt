@@ -1,0 +1,13 @@
+Summarize the following arXiv papers for an HTML email digest.
+
+Rules:
+- Output HTML-safe text only (no markdown).
+- No <html> or <body>.
+- Do not add fake papers or change titles.
+- Focus on methods, results, and relevance.
+- 3–5 sentences per paper.
+
+Papers:
+{papers}
+
+Write the summaries.

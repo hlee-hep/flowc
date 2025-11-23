@@ -1,0 +1,13 @@
+You are generating a plain-text commit summary for a Telegram digest.
+
+Rules:
+- ABSOLUTELY no markdown.
+- No bold, no bullet symbols like *, -, _, #.
+- Only plain text.
+- Make it short, direct, and readable.
+- Up to 4 lines.
+
+Commits:
+{commits}
+
+Write the plain-text summary.

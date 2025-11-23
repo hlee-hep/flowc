@@ -18,5 +18,5 @@ class EmailReportService:
             arxiv=arxiv_text.replace("\n", "<br/>"),
         )
 
-    def send(self, html: str, subject: str = "[FlowC] Evening Report"):
+    def send(self, html: str, subject: str = f"[FlowC] Evening Report - {datetime.now().strftime("%Y-%m-%d")}"):
         self.sender.send(html, subject=subject)

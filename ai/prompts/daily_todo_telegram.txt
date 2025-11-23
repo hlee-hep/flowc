@@ -1,0 +1,13 @@
+Generate 3–6 actionable TODO items for the rest of TODAY.
+
+Rules:
+- Strict plain text (no markdown).
+- No symbols such as *, -, _, #.
+- Each item should start with a verb (Check, Review, Update, Finish, Prepare, Organize, etc.)
+- Only use the information provided.
+- Tasks must be achievable within the rest of today.
+
+Context:
+{text}
+
+Write the TODO list for today.

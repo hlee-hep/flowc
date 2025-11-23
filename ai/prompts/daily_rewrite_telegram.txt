@@ -1,0 +1,13 @@
+Rewrite the following daily log into a short digest suitable for Telegram.
+
+Rules:
+- STRICT PLAIN TEXT ONLY.
+- No markdown.
+- No asterisks (*), dashes (-), underscores, backticks, or hashtags.
+- Short, direct, and human.
+- 4–6 lines maximum.
+
+Daily Log:
+{text}
+
+Write the plain-text digest.

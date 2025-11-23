@@ -1,0 +1,13 @@
+Rewrite the following daily log into a smooth, compact summary for an HTML email.
+
+Rules:
+- HTML-safe plain text.
+- Do not wrap in HTML tags.
+- No markdown formatting.
+- No bullet symbols requiring markdown.
+- Keep the tone professional but natural.
+
+Daily Log:
+{text}
+
+Write the summary now.
