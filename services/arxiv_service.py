@@ -1,6 +1,6 @@
-# flowc/services/arxiv_service.py
-
+import logging
 import xml.etree.ElementTree as ET
+
 from flowc.connectors.arxiv_api import ArxivAPI
 from flowc.connectors.db import PaperDatabase
 
@@ -8,6 +8,8 @@ KEYWORDS = [
     "tau", "lfv", "belle ii", "trigger",
     "form factor", "tdcpv"
 ]
+
+logger = logging.getLogger(__name__)
 
 class ArxivService:
     def __init__(self):
@@ -18,7 +20,16 @@ class ArxivService:
         return self.api.fetch()
 
     def parse(self, raw: str) -> list[dict]:
-        root = ET.fromstring(raw)
+        if not raw:
+            logger.warning("Empty arXiv payload received; skipping parse")
+            return []
+
+        try:
+            root = ET.fromstring(raw)
+        except ET.ParseError as exc:
+            logger.error("Failed to parse arXiv feed: %s", exc)
+            return []
+
         ns = {"atom": "http://www.w3.org/2005/Atom"}
         entries = []
         for entry in root.findall("atom:entry", ns):
