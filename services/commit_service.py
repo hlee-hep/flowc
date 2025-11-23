@@ -14,15 +14,6 @@ class CommitService:
 
         return self.git.get_commit_log(days=days)
 
-    def for_email(self, summary: str) -> str:
-        return f"<h2>Git Commits</h2><pre>{summary}</pre>"
-
-    def for_telegram(self, summary: str) -> str:
-        return f"*Commits*\n{summary}"
-
-    def for_notion(self, summary: str) -> str:
-        return summary
-
     def run(self, days=1) -> str:
         raw = self.get_raw(days)
         return self.summarize(raw)

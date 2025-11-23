@@ -3,6 +3,7 @@ from flowc.services.telegram_digest_service import TelegramDigestService
 from flowc.services.commit_service import CommitService
 from flowc.services.email_report_service import EmailReportService
 from flowc.services.arxiv_service import ArxivService
+from flowc.services.archive_service import ArchiveService
 
 from flowc.ai.summary import rewrite_daily_log, summarize_commits, summarize_arxiv
 
@@ -14,21 +15,19 @@ class EveningFlow:
         self.commit = CommitService()
         self.email = EmailReportService()
         self.arxiv = ArxivService()
-
+        self.archive = ArchiveService()
+    
     def run(self):
-        telegram_msg = ""
 
         # ------------------------------------------------
         # 1) Commit
         # ------------------------------------------------
         commit_results = self._process_commits()
-        telegram_msg += commit_results["telegram"] + "\n"
 
         # ------------------------------------------------
         # 2) Notion Summary (AI)
         # ------------------------------------------------
         notion_results = self._process_notion(commit_results)
-        telegram_msg += notion_results["telegram"] + "\n"
 
         # ------------------------------------------------
         # 3) Arxiv (AI)
@@ -38,7 +37,7 @@ class EveningFlow:
         # ------------------------------------------------
         # 4) Email
         # ------------------------------------------------
-        self._process_email(
+        email_html = self._process_email(
             notion_results["email"],
             commit_results["email"],
             arxiv_results["email"],
@@ -47,10 +46,25 @@ class EveningFlow:
         # ------------------------------------------------
         # 5) Telegram digest
         # ------------------------------------------------
-        if telegram_msg.strip():
-            formatted = self.telegram.format_evening(telegram_msg.strip())
-            self.telegram.send(formatted)
+        telegram_msg = self._process_telegram(commit_results["telegram"],notion_results["telegram"],arxiv_results["telegram"])
 
+        #
+        # 6) Archieving
+        #
+        self.archive.save_html("email.html", email_html)
+        self.archive.save_text("telegram.txt", telegram_msg.strip())
+
+        # Notion summaries
+        self.archive.save_text("notion_email.txt", notion_results["email"])
+        self.archive.save_text("notion_telegram.txt", notion_results["telegram"])
+
+        # Commit summaries
+        self.archive.save_text("commit_email.txt", commit_results["email"])
+        self.archive.save_text("commit_telegram.txt", commit_results["telegram"])
+
+        # Arxiv summaries
+        self.archive.save_html("arxiv_email.html", arxiv_results["email"])
+        self.archive.save_text("arxiv_telegram.txt", arxiv_results["telegram"])
     # ========================================================================
     # Commit Section
     # ========================================================================
@@ -74,8 +88,8 @@ class EveningFlow:
 
         # prepare outputs
         result["notion"] = summary_for_notion
-        result["telegram"] = self.commit.for_telegram(summary_for_telegram)
-        result["email"] = self.commit.for_email(summary_for_email)
+        result["telegram"] = summary_for_telegram
+        result["email"] = summary_for_email
 
         return result
 
@@ -149,3 +163,9 @@ class EveningFlow:
             arxiv_text=arxiv_email,
         )
         self.email.send(email_html)
+        return email_html
+
+    def _process_telegram(self, commit_telegram, notion_telegram, arxiv_telegram):
+        telegram_msg = self.telegram.build_message_for_evening(commit_telegram, notion_telegram, arxiv_telegram)
+        self.telegram.send(telegram_msg)
+        return telegram_msg

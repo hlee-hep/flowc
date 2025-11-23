@@ -12,21 +12,17 @@ class MorningFlow:
         page = self.notion.get_today_page(self.notion.db_id)
 
         if not page:
-            text = "No Notion daily page found for today."
-            self.telegram.send(text)
-            return text
-
-        raw_todo = self.notion.read_todo(page)
-
-        if not raw_todo.strip():
-            text = "No TODO items for today."
-            self.telegram.send(text)
-            return text
+            raw_todo = ""
+        else:
+            raw_todo = self.notion.read_todo(page)
 
         rewritten = rewrite_daily_todo(raw_todo)
 
-        message = self.telegram.format_morning(rewritten)
-
-        self.telegram.send(message)
+        message = self._process_telegram(page,rewritten)
 
         return message
+
+    def _process_telegram(self, page, todo):
+        msg = self.telegram.build_message_for_morning(page,todo)
+        self.telegram.send(msg)
+        return msg
