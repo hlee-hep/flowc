@@ -1,27 +1,27 @@
-# flowc
+# flowc - Personal Automation Flow Engine
 
-flowc is a lightweight automation system for personal productivity routines.
-It connects Git logs, Notion, Telegram, Email, and arXiv, and uses GPT models
-to summarize or rewrite content.
+`flowc` is a lightweight automation system that generates daily digests from Git commits, arXiv papers, InspireHEP, Notion logs, Telegram, and Email.  
+It provides a simple, modular structure for building scheduled “morning” and “evening” workflows powered by OpenAI models.
+
+---
 
 ## Features
-- Summarize Git commits
-- Rewrite daily logs and TODOs
-- Generate arXiv digests (GPT-5.1)
-- Send Telegram / Email reports
-- Update Notion daily pages
-- Modular Flows (dawn / morning / evening)
 
-## Structure
-- `flows/` — Automations (MorningFlow, EveningFlow, DawnFlow)
-- `services/` and `connectors/` - External integrations (Git, Notion, Telegram, Email, arXiv)
-- `ai/` — OpenAI wrapper, prompt templates, summarization helpers
-- `config.py` — API keys and environment settings
+- **Git commit summarization**  
+  Collects recent commits and produces compact or detailed summaries.
 
-## How It Works
-Services gather raw data.  
-AI transforms text using GPT via `AI.ask()`.  
-Prompts are centrally managed in `PromptManager`.
+- **Daily paper highlights**  
+  - **Morning:** Fetches top-cited or trending papers from **InspireHEP** and summarizes them via AI.  
+  - **Evening:** Retrieves the latest papers from **arXiv** and generates concise or multi-sentence digests.
 
-## Status
-Work in progress. Adding more flows and automation soon.
+- **Notion daily log integration**  
+  Converts raw daily notes into clean, coherent summaries.
+
+- **Telegram & Email reporting**  
+  Sends short Telegram digests and full HTML reports via email.
+
+- **Caching & retrying**  
+  Automatic TTL-based caching and retry mechanisms reduce API usage and noise.
+
+- **Modular service-based design**  
+  Easy to extend and customize with additional services or flows.
