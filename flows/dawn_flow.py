@@ -3,7 +3,7 @@ import logging
 from flowc.services.notion_service import NotionService
 from flowc.services.arxiv_service import ArxivService
 from flowc.connectors.hot_paper_pool import HotPaperPool
-
+from flowc.connectors.hot_paper_history import HotPaperHistory
 logger = logging.getLogger(__name__)
 
 
@@ -12,6 +12,7 @@ class DawnFlow:
         self.notion = NotionService()
         self.arxiv = ArxivService()
         self.pool = HotPaperPool()
+        self.history = HotPaperHistory()
 
     def run(self) -> str:
         logger.info("Starting dawn flow: carrying TODO forward")
@@ -39,6 +40,6 @@ class DawnFlow:
 
         logger.info("Dawn flow: saving today's hot paper")
         self.arxiv.save_hot_papers(data)
-
+        self.history.save(data)
         logger.info("Dawn flow finished")
         return "OK"

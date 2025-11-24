@@ -2,6 +2,7 @@ import logging
 from datetime import datetime, date, timedelta
 from flowc.connectors.notion import NotionClient
 from flowc.config import Config
+from flowc.utils.markdown_to_rich_text import markdown_to_rich_text
 
 logger = logging.getLogger(__name__)
 
@@ -21,12 +22,20 @@ class NotionService:
     def read_field(self, page, name: str) -> str:
         return NotionClient.get_text(page["properties"], name)
 
-    def write_field(self, page_id: str, field: str, text: str):
-        return self.client.update_page(page_id, {
-            field: {
-                "rich_text": [{"text": {"content": text}}],
+    def write_field(self, page_id: str, field: str, text: str, markdown: bool = True):
+        if markdown:
+            rich = markdown_to_rich_text(text)
+        else:
+            rich = [{"text": {"content": text}}]
+
+        return self.client.update_page(
+            page_id,
+            {
+                field: {
+                    "rich_text": rich,
+                }
             }
-        })
+        )
 
     def read_todo(self, page) -> str:
         return self.read_field(page, "TODO")

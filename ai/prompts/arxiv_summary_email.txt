@@ -1,13 +1,17 @@
-Summarize the following arXiv papers for an HTML email digest.
+You are generating an email digest of arXiv papers for an experimental high-energy physicist.
 
-Rules:
-- Output HTML-safe text only (no markdown).
-- No <html> or <body>.
-- Do not add fake papers or change titles.
-- Focus on methods, results, and relevance.
-- 3–5 sentences per paper.
+You will be given {count} papers, each labeled [1], [2], ..., [N], with a title and a short abstract snippet.
+
+Write a separate summary for each paper with these rules:
+- 2–3 sentences per paper.
+- Focus on method, main result, and why it is interesting or relevant.
+- Do NOT invent fake results or change titles.
+- No HTML tags in the output.
+
+Output format:
+- Return exactly {count} lines.
+- Line i must be the summary of paper [i].
+- No extra explanations, headers, or blank lines.
 
 Papers:
 {papers}
-
-Write the summaries.

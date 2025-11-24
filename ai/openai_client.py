@@ -10,7 +10,7 @@ logger = logging.getLogger(__name__)
 
 class AI:
     client = OpenAI(api_key=Config.OPENAI_API_KEY)
-    model_name = "gpt-4o-mini"
+    model_name = "gpt-4o"
 
     @classmethod
     def model(cls, name: str):

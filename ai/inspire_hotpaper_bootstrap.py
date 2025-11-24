@@ -75,7 +75,7 @@ class InspireHotPaperBootstrap:
 
     Return only the rewritten summary.
     """
-                clean_summary = AI.model("gpt-4o-mini").ask(prompt, ttl=86400)
+                clean_summary = AI.model("gpt-4o").ask(prompt, ttl=86400)
                 if not clean_summary:
                     clean_summary = raw_summary
             else:

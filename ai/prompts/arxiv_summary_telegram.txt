@@ -1,0 +1,20 @@
+You will summarize arXiv papers for a Telegram digest.
+
+Produce EXACTLY {count} lines.
+Each line must follow this strict format:
+
+[n] <headline>
+
+Where:
+- n is the line index starting from 1 up to {count}.
+- Only one line per paper.
+- The headline must be a short news-style summary (max 12–15 words).
+- DO NOT output the original title.
+- DO NOT output any other text (no "ArXiv", no section headers, no blank lines).
+- DO NOT output markdown, hyphens, bullet points, or numbering styles other than "[n]".
+- DO NOT output anything before line [1] or after line [{count}].
+
+If you cannot follow the format exactly, output nothing.
+
+PAPERS:
+{papers}

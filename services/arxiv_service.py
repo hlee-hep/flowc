@@ -2,6 +2,8 @@ import logging
 import xml.etree.ElementTree as ET
 import os
 import yaml
+import dateutil.parser as dp
+from datetime import datetime, timedelta, timezone
 
 from flowc.connectors.arxiv_api import ArxivAPI
 from flowc.connectors.db import PaperDatabase
@@ -26,44 +28,65 @@ class ArxivService:
         logger.info("Fetching arXiv feed")
         return self.api.fetch()
 
-    def parse(self, raw: str) -> list[dict]:
+    def parse(self, raw: str, days=1) -> list[dict]:
         if not raw:
-            logger.warning("Empty arXiv payload received; skipping parse")
             return []
 
         try:
             root = ET.fromstring(raw)
-        except ET.ParseError as exc:
-            logger.error("Failed to parse arXiv feed: %s", exc)
+        except ET.ParseError:
             return []
 
         ns = {"atom": "http://www.w3.org/2005/Atom"}
-        entries = []
+
+        # UTC awareness
+        cutoff = datetime.now(timezone.utc) - timedelta(days=days)
+
+        papers = []
+
         for entry in root.findall("atom:entry", ns):
-            title = entry.find("atom:title", ns).text
-            summary = entry.find("atom:summary", ns).text
-            link = entry.find("atom:link", ns).attrib.get("href")
-            idx = entry.find("atom:id", ns).text
-            entries.append({
-                "id": idx,
-                "title": title,
-                "summary": summary,
-                "link": link,
+            updated_str = entry.find("atom:updated", ns).text
+            updated = dp.parse(updated_str)
+
+            # ensure updated is aware (UTC)
+            if updated.tzinfo is None:
+                updated = updated.replace(tzinfo=timezone.utc)
+            else:
+                updated = updated.astimezone(timezone.utc)
+
+            # filter
+            if updated < cutoff:
+                continue
+
+            papers.append({
+                "id": entry.find("atom:id", ns).text,
+                "title": entry.find("atom:title", ns).text.strip(),
+                "summary": entry.find("atom:summary", ns).text.strip(),
+                "link": entry.find("atom:id", ns).text,
+                "updated": updated,
             })
-        logger.info("Parsed %d arXiv entries", len(entries))
-        return entries
+
+        logger.info("Parsed %d entries after date filter", len(papers))
+        return papers
 
     def filter_interesting(self, papers: list[dict]) -> list[dict]:
-        dynamic_keywords = self.keyword_engine.generate(papers[:20]) 
+        ai_keywords = self.keyword_engine.generate(papers[:20])
+
+        all_keywords = set(self.keyword_engine.base_keywords) | set(ai_keywords)
 
         filtered = []
         for p in papers:
             title_lower = p["title"].lower()
+            summary_lower = p["summary"].lower()
 
-            all_keywords = set(dynamic_keywords) | set(self.keyword_engine.base_keywords)
-            #all_keywords = dynamic_keywords
+            k1 = any(kw in title_lower for kw in all_keywords)
+            k2 = any(kw in summary_lower for kw in all_keywords)
 
-            if any(kw in title_lower for kw in all_keywords):
+            k3 = any(kw in title_lower for kw in self.keyword_engine.base_keywords)
+
+            k4 = "phys" in title_lower or "hep" in title_lower
+
+            if k1 or k2 or k3 or k4:
                 if not self.db.paper_exists(p["id"]):
                     filtered.append(p)
 
@@ -79,11 +102,16 @@ class ArxivService:
 
     def run(self) -> list[dict]:
         raw = self.fetch_raw()
-        papers = self.parse(raw)
-        interesting = self.filter_interesting(papers)
-        logger.info("ArxivService run completed with %d papers", len(interesting))
-        return interesting
 
+        papers = self.parse(raw, days=1)
+
+        if len(papers) == 0:
+            logger.info("No papers in last 1 day, falling back to last 3 days")
+            papers = self.parse(raw, days=3)
+
+        interesting = self.filter_interesting(papers)
+        return interesting
+        
     def format_html(self, p: dict, summary: str) -> str:
         return f"<b>{p['title']}</b><br>{summary}<br><a href='{p['link']}'>[link]</a><br><br>"
 
