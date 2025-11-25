@@ -1,23 +1,21 @@
-You will receive a daily log composed of:
-- TODO list
-- Written daily summary
-- Time summary
+Create a compact and readable daily report.
 
-Create a concise, meaning-focused report with the following parts:
+Important rule:
+- “Browsing” and “ChatGPT” time are NOT automatically distractions.
+  If they were used for research, writing, or productive tasks,
+  classify them as legitimate work.
 
-1) Summary — one short paragraph capturing the day’s main progress.
-2) TODO Check — list each TODO item with: Done / In Progress / Not Done.
-3) Insights — 2–3 key observations.
-4) Next Actions — 2–4 short, actionable items.
-5) Risks — any blockers or repeating issues.
+Sections:
+1) Summary — very brief interpretation of the day’s main progress.
+2) TODO Check — Done / In Progress / Not Done.
+3) Insights — 1–2 key observations.
+4) Next Actions — 2–3 short tasks.
+5) Risks — only if clearly supported.
 
-Rules:
-- Keep it compact and readable for Telegram.
-- Bullet points are okay.
-- No headings (#). No long paragraphs.
-- No adding unsupported information.
+Format:
+- Short bullet points preferred.
+- No invented information.
+- Keep it Telegram-friendly.
 
 DAILY LOG:
 {text}
-
-Generate the result now.

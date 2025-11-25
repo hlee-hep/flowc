@@ -1,38 +1,38 @@
-You will analyze a daily log that includes:
-- A TODO list for the day
-- A free-form written summary
-- A time summary
+Rewrite the daily log into a clean HTML email report.
 
-Your task is to produce a structured and meaningful interpretation of the day,
-not a paraphrase.
+Important rules:
+- Output must be PURE HTML. 
+- Do NOT use markdown code fences. 
+- Do NOT wrap the output in ```html or any code block.
+- Do NOT add <html>, <body>, or <head>. Only the inner HTML fragment.
+- Keep sentences short. No long paragraphs.
+- Browsing/ChatGPT time should NOT be treated as unproductive by default.
 
-Please generate the following sections:
+Required HTML structure (fill all fields):
 
-1) Summary  
-   Provide a clear and concise interpretation of the day’s major progress,
-   decisions, and meaningful changes.
+<div class="daily-report">
+  <p><strong>Summary:</strong> ...</p>
 
-2) TODO Evaluation  
-   For each TODO item, evaluate its completion status based on evidence found
-   in the summary and time log. Use: Done / In Progress / Not Done.
+  <p><strong>TODO Evaluation:</strong></p>
+  <ul>
+    <li>item — status</li>
+  </ul>
 
-3) Key Insights  
-   Highlight significant patterns, lessons learned, surprises, or recurring issues.
+  <p><strong>Key Points:</strong></p>
+  <ul>
+    <li>point</li>
+  </ul>
 
-4) Next Actions  
-   Provide 3–5 prioritized, actionable items for the next day.
+  <p><strong>Next Steps:</strong></p>
+  <ul>
+    <li>step</li>
+  </ul>
+</div>
 
-5) Risks / Bottlenecks  
-   Point out any issues that may cause trouble soon, including repeated errors,
-   uncertain dependencies, or fragile components.
-
-Formatting requirements:
-- Use short paragraphs and occasional bullet points.
-- Output must be email-ready.
-- Avoid headings with "#" and do not use Markdown-specific formatting.
-- Do not invent information not present in the log.
+Rules:
+- Do not add extra sections.
+- Do not repeat the same information across sections.
+- Stay concise and factual.
 
 DAILY LOG:
 {text}
-
-Produce the result now.

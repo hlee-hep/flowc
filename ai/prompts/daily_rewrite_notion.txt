@@ -1,41 +1,22 @@
-You will receive a daily log that contains:
-- A TODO list for the day
-- A user-written free-form summary
-- A time summary
+Rewrite the daily log into a concise meaning-focused report.
 
-Your goal is NOT to rewrite the text but to interpret its meaning.
+Important rule:
+- Do NOT assume that “Browsing” or “ChatGPT” time is unproductive.
+  If the log shows they were used for research, technical exploration,
+  writing, or analysis, treat them as productive work.
 
-Perform the following tasks:
+Sections:
+1) Summary — 2–3 sentences describing the day’s main progress.
+2) TODO Evaluation — For each item: Done / In Progress / Not Done.
+3) Insights — 2–3 short observations directly supported by the log.
+4) Next Actions — 2–3 concrete tasks for tomorrow.
+5) Risks — Only list risks that are explicitly or implicitly supported.
 
-1) **Evaluate TODO Completion**
-   - Compare each TODO item with the content in the summary and time log.
-   - Mark each as: (Done) / (In Progress) / (Not Done).
-   - If ambiguous, choose the most reasonable interpretation.
-
-2) **Summary**
-   - Provide a high-level interpretation of the day.
-   - Focus on important progress, meaningful decisions, and notable changes.
-   - Ignore trivial edits or repetitive details.
-
-3) **Key Insights**
-   - Identify patterns, lessons, or notable observations from the day.
-   - Provide interpretation, not paraphrasing.
-
-4) **Next Actions**
-   - Suggest 2–5 concrete tasks for the next day.
-   - Must be actionable and logically derived from the day’s work.
-
-5) **Risks / Bottlenecks**
-   - Identify potential blockers, repeated errors, fragile components,
-     or tasks likely to cause issues soon.
-
-Formatting rules:
-- NO headings (#).
-- You may use **bold**, bullet points, and short paragraphs.
-- Keep the tone analytical and concise.
-- Do NOT add information not supported by the log.
+Rules:
+- No managerial tone.
+- No redundant repetition.
+- No invented information.
+- Compact and clean for Notion.
 
 DAILY LOG:
 {text}
-
-Generate the result now.
