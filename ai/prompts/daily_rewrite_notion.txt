@@ -1,12 +1,41 @@
-Rewrite the following daily log into a clean, human-readable summary.
+You will receive a daily log that contains:
+- A TODO list for the day
+- A user-written free-form summary
+- A time summary
 
-Rules:
-- Markdown-friendly but NO headings (#).
-- You may use simple bold and bullet points.
-- No added information.
-- Preserve the meaning but rewrite fluently.
+Your goal is NOT to rewrite the text but to interpret its meaning.
 
-Daily Log:
+Perform the following tasks:
+
+1) **Evaluate TODO Completion**
+   - Compare each TODO item with the content in the summary and time log.
+   - Mark each as: (Done) / (In Progress) / (Not Done).
+   - If ambiguous, choose the most reasonable interpretation.
+
+2) **Summary**
+   - Provide a high-level interpretation of the day.
+   - Focus on important progress, meaningful decisions, and notable changes.
+   - Ignore trivial edits or repetitive details.
+
+3) **Key Insights**
+   - Identify patterns, lessons, or notable observations from the day.
+   - Provide interpretation, not paraphrasing.
+
+4) **Next Actions**
+   - Suggest 2–5 concrete tasks for the next day.
+   - Must be actionable and logically derived from the day’s work.
+
+5) **Risks / Bottlenecks**
+   - Identify potential blockers, repeated errors, fragile components,
+     or tasks likely to cause issues soon.
+
+Formatting rules:
+- NO headings (#).
+- You may use **bold**, bullet points, and short paragraphs.
+- Keep the tone analytical and concise.
+- Do NOT add information not supported by the log.
+
+DAILY LOG:
 {text}
 
-Rewrite it now.
+Generate the result now.

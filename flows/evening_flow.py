@@ -119,11 +119,11 @@ class EveningFlow:
                 "telegram": "No notion page today.",
                 "email": "No notion page today.",
             }
-
+        raw_todo = self.notion.read_todo(page)
         raw_time = self.notion.read_time_summary(page)
         raw_sum = self.notion.read_summary(page)
 
-        daily_log = f"Summary:\n{raw_sum}\n\n{raw_time}"
+        daily_log = f"TODO for Today:\n{raw_todo}\n\nSummary:\n{raw_sum}\n\n{raw_time}"
 
         # Three versions
         ai_telegram = rewrite_daily_log(daily_log, mode="telegram")

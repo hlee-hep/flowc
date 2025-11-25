@@ -1,13 +1,23 @@
-Rewrite the following daily log into a short digest suitable for Telegram.
+You will receive a daily log composed of:
+- TODO list
+- Written daily summary
+- Time summary
+
+Create a concise, meaning-focused report with the following parts:
+
+1) Summary — one short paragraph capturing the day’s main progress.
+2) TODO Check — list each TODO item with: Done / In Progress / Not Done.
+3) Insights — 2–3 key observations.
+4) Next Actions — 2–4 short, actionable items.
+5) Risks — any blockers or repeating issues.
 
 Rules:
-- STRICT PLAIN TEXT ONLY.
-- No markdown.
-- No asterisks (*), dashes (-), underscores, backticks, or hashtags.
-- Short, direct, and human.
-- 4–6 lines maximum.
+- Keep it compact and readable for Telegram.
+- Bullet points are okay.
+- No headings (#). No long paragraphs.
+- No adding unsupported information.
 
-Daily Log:
+DAILY LOG:
 {text}
 
-Write the plain-text digest.
+Generate the result now.

@@ -1,13 +1,38 @@
-Rewrite the following daily log into a smooth, compact summary for an HTML email.
+You will analyze a daily log that includes:
+- A TODO list for the day
+- A free-form written summary
+- A time summary
 
-Rules:
-- HTML-safe plain text.
-- Do not wrap in HTML tags.
-- No markdown formatting.
-- No bullet symbols requiring markdown.
-- Keep the tone professional but natural.
+Your task is to produce a structured and meaningful interpretation of the day,
+not a paraphrase.
 
-Daily Log:
+Please generate the following sections:
+
+1) Summary  
+   Provide a clear and concise interpretation of the day’s major progress,
+   decisions, and meaningful changes.
+
+2) TODO Evaluation  
+   For each TODO item, evaluate its completion status based on evidence found
+   in the summary and time log. Use: Done / In Progress / Not Done.
+
+3) Key Insights  
+   Highlight significant patterns, lessons learned, surprises, or recurring issues.
+
+4) Next Actions  
+   Provide 3–5 prioritized, actionable items for the next day.
+
+5) Risks / Bottlenecks  
+   Point out any issues that may cause trouble soon, including repeated errors,
+   uncertain dependencies, or fragile components.
+
+Formatting requirements:
+- Use short paragraphs and occasional bullet points.
+- Output must be email-ready.
+- Avoid headings with "#" and do not use Markdown-specific formatting.
+- Do not invent information not present in the log.
+
+DAILY LOG:
 {text}
 
-Write the summary now.
+Produce the result now.
