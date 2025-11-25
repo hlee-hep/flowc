@@ -126,7 +126,7 @@ class ArxivService:
         os.makedirs(os.path.dirname(HOT_PAPER_PATH), exist_ok=True)
         with open(HOT_PAPER_PATH, "w") as f:
             yaml.dump(data, f, allow_unicode=True)
-        logger.info("ArxivService: saved today's hot paper → hot_papers.yaml")
+        logger.info("ArxivService: saved today's hot paper -> hot_papers.yaml")
 
     def get_hot_pick(self) -> dict | None:
         """Return today's saved paper (the only one)."""

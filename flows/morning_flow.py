@@ -12,7 +12,7 @@ class MorningFlow:
     def __init__(self):
         self.notion = NotionService()
         self.telegram = TelegramDigestService()
-        self.arxiv = ArxivService()  # ★ 추가
+        self.arxiv = ArxivService() 
 
     def run(self) -> str:
         logger.info("Starting morning flow: preparing TODO digest")
@@ -27,7 +27,6 @@ class MorningFlow:
         rewritten = rewrite_daily_todo(raw_todo)
         logger.info("Rewrote TODO list with AI; preparing morning Telegram digest")
 
-        # ★ NEW: Load today's HotPaper
         hot = self.arxiv.get_hot_pick()
         if hot:
             logger.info("Loaded today's HotPaper for morning digest")

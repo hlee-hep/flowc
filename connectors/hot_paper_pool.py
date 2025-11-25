@@ -63,7 +63,7 @@ class HotPaperPool:
 
     def get_one_unused(self) -> dict | None:
         """
-        Get ONE unused paper (oldest first).
+        Get ONE unused paper (random).
         """
         cur = self.conn.cursor()
         cur.execute(
@@ -71,12 +71,13 @@ class HotPaperPool:
             SELECT id, title, summary, year, arxiv
             FROM hot_paper_pool
             WHERE used = 0
-            ORDER BY created_at ASC
+            ORDER BY RANDOM()
             LIMIT 1
             """
         )
         row = cur.fetchone()
         return dict(row) if row else None
+
 
     def mark_used(self, pid: str):
         cur = self.conn.cursor()
