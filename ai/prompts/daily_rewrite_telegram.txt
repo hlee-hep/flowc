@@ -1,21 +1,26 @@
-Create a compact and readable daily report.
+Create a compact and readable daily report formatted for Telegram Markdown (NOT MarkdownV2).
+
+Styling rules:
+- Use short bullet points.
+- Bold section titles using **text**.
+- Do NOT use $, \, _, { }, [ ], ( ), *, ~, `, or LaTeX expressions.
+- If unavoidable special characters appear, rewrite them in plain text.
+- Keep paragraphs short for Telegram readability.
+- No invented information.
+
+Sections:
+1) **Summary** — very brief interpretation of the day’s main progress.
+2) **TODO Check** — mark each as Done / In Progress / Not Done.
+3) **Insights** — 1–2 key observations.
+4) **Next Actions** — 2–3 concrete tasks.
+5) **Risks** — only if clearly supported.
 
 Important rule:
 - “Browsing” and “ChatGPT” time are NOT automatically distractions.
   If they were used for research, writing, or productive tasks,
   classify them as legitimate work.
 
-Sections:
-1) Summary — very brief interpretation of the day’s main progress.
-2) TODO Check — Done / In Progress / Not Done.
-3) Insights — 1–2 key observations.
-4) Next Actions — 2–3 short tasks.
-5) Risks — only if clearly supported.
-
-Format:
-- Short bullet points preferred.
-- No invented information.
-- Keep it Telegram-friendly.
+Output only the formatted report.
 
 DAILY LOG:
 {text}
